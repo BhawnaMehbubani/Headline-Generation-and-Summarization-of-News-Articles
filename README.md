@@ -16,6 +16,93 @@ This project implements a headline summarization pipeline using the T5 transform
 
 - Detailed logging for debugging and monitoring.
 
+
+## Project workflow
+```plaintext
+1. Dataset and Data Preparation
+   ┌─────────────────────────────────────────────────────────┐
+   │ Dataset: XSum (Extreme Summarization Dataset)           │
+   │ - Source: Hugging Face Datasets Library                 │
+   │ - Purpose: News article summarization and headline gen  │
+   └─────────────────────────────────────────────────────────┘
+                              |
+                              v
+   ┌─────────────────────────────────────────────────────────┐
+   │ Data Loading                                             │
+   │ - Download the XSum dataset                             │
+   │ - Automatically splits data into Train, Validation,     │
+   │   and Test sets using Hugging Face's `load_dataset` API │
+   │ - Ensures compatibility for fine-tuning T5              │
+   └─────────────────────────────────────────────────────────┘
+                              |
+                              v
+   ┌─────────────────────────────────────────────────────────┐
+   │ Tokenization and Input Preprocessing                    │
+   │ - Hugging Face T5 Tokenizer (`T5Tokenizer`)             │
+   │ - Converts text input (articles) into model-readable    │
+   │   token sequences                                       │
+   │ - Includes:                                             │
+   │   - Truncation to max sequence length                   │
+   │   - Padding to ensure uniform sequence length           │
+   │ - Prepares summary text as target labels for training   │
+   └─────────────────────────────────────────────────────────┘
+
+2. Model Setup and Fine-Tuning
+   ┌─────────────────────────────────────────────────────────┐
+   │ Model: Pretrained T5                                    │
+   │ - Framework: Hugging Face Transformers Library          │
+   │ - Fine-tuned on the XSum dataset for the following tasks│
+   │   - Headline Generation                                 │
+   │   - Abstractive Summarization                          │
+   │ - Configuration:                                        │
+   │   - Pre-trained weights for T5                         │
+   │   - Loss function: Cross-Entropy                       │
+   │   - Optimized for GPU acceleration                     │
+   └─────────────────────────────────────────────────────────┘
+                              |
+                              v
+   ┌─────────────────────────────────────────────────────────┐
+   │ Training Pipeline                                        │
+   │ - Uses Hugging Face Trainer API for fine-tuning         │
+   │ - Configurations:                                       │
+   │   - Batch size: Suitable for GPU                        │
+   │   - Learning rate scheduler for adaptive optimization   │
+   │   - Gradient clipping to stabilize training             │
+   │ - Logs metrics for validation set after each epoch:     │
+   │   - Rouge Score                                         │
+   └─────────────────────────────────────────────────────────┘
+
+3. Evaluation and Results
+   ┌─────────────────────────────────────────────────────────┐
+   │ Model Evaluation                                        │
+   │ - Test the fine-tuned model on unseen test data         │
+   │ - Output:                                               │
+   │   - Predicted summaries and headlines                  │
+   │ - Metrics for Quality Assessment:                      │
+   │   - Rouge Score (Precision, Recall, F1)                │
+   │ - Sample Comparison:                                   │
+   │   - Input Article vs. Generated Summary/Headline       │
+   └─────────────────────────────────────────────────────────┘
+
+4. Saving the Model
+   ┌─────────────────────────────────────────────────────────┐
+   │ Save Trained Model                                      │
+   │ - Save fine-tuned T5 model weights                     │
+   │ - Save tokenizer for consistent input handling         │
+   │ - Format: Compatible with Hugging Face Transformers    │
+   └─────────────────────────────────────────────────────────┘
+                              |
+                              v
+5. Generated Results Visualization
+   ┌─────────────────────────────────────────────────────────┐
+   │ Results Presentation                                    │
+   │ - Display comparison of:                               │
+   │   - Input Articles                                      │
+   │   - Model Summaries and Headlines                      │
+   │ - Examine output quality for various test cases        │
+   └─────────────────────────────────────────────────────────┘
+
+```
 ## Demo
 
 #### Input Example:
@@ -186,11 +273,5 @@ git push origin feature-name
 ```
 #### Open a pull request.
 
-## Acknowledgments
 
-- Hugging Face for their excellent transformers library.
-
-- The authors of the XSum dataset for providing high-quality training data.
-
-- Gradio for making ML deployment simple and accessible.
 
